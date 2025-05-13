@@ -35,6 +35,17 @@ const BookOverview = ({
           </div>
         </div>
 
+        {/* .book-copies {
+          @apply flex flex-row flex-wrap gap-4 mt-1;
+        }
+
+        .book-copies p {
+          @apply text-xl text-light-100;
+        }
+
+        .book-copies p span {
+          @apply ml-2 font-semibold text-primary;
+        } */}
         <div className="book-copies">
           <p>
             Total Books: <span>{total_copies}</span>
@@ -44,10 +55,16 @@ const BookOverview = ({
           </p>
         </div>
 
+        {/* .book-description {
+          @apply mt-2 text-justify text-xl text-light-100;
+        } */}
         <p className="book-description">
           {description}
         </p>
 
+      {/* .book-overview_btn {
+        @apply mt-4 min-h-14 w-fit bg-primary text-dark-100 hover:bg-primary/90 max-md:w-full !important;
+      } */}
         <Button className="book-overview_btn">
           <Image src="icons/book.svg" alt="book" width={20} height={20} />
           <p className="font-bebas-neue text-xl text-dark-100">Borrow Book</p>
