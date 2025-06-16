@@ -1,3 +1,5 @@
+// pass coverColor of the book images to wrap it with the same color bound 
+
 const BookCoverSvg = ({ coverColor }: { coverColor: string }) => {
     return (
         <svg

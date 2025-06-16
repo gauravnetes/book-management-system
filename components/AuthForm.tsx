@@ -4,19 +4,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import {
   DefaultValues,
-  FieldValue,
   FieldValues,
   Path,
   SubmitHandler,
   useForm,
   UseFormReturn,
 } from "react-hook-form";
-import { z, ZodType } from "zod";
+import { ZodType } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -31,7 +29,7 @@ import { useRouter } from "next/navigation";
 
 // T takes the type whatever we pass into it
 // as we don't know what the exact structure will look like
-interface Props<T extends FieldValue> {
+interface Props<T extends FieldValues> {
   schema: ZodType<T>;
   defaultValues: T;
   onSubmit: (data: T) => Promise<{ success: boolean; error?: string }>;
@@ -44,7 +42,7 @@ const AuthForm = <T extends FieldValues>({
   defaultValues,
   onSubmit,
 }: Props<T>) => {
-  const isSignIn = type === "SIGN_IN";
+  const isSignIn = (type === "SIGN_IN");
   const router = useRouter()
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema), // signInSchema | signUpSchema
@@ -55,20 +53,32 @@ const AuthForm = <T extends FieldValues>({
   const handleSubmit: SubmitHandler<T> = async (data) => {
     const res = await onSubmit(data);
     if(res.success) {
-      toast("Success", {
+      toast.success("Success", {
         description: isSignIn ? 
                       "You have successfully Signed In" : 
                       "You have Successfully Signed Up"
       })
       router.push('/');
     } else {
-      toast(`Error ${isSignIn ? `Error Signing In` : `Error Signing Up`}`, {
+      toast.error(`Error ${isSignIn ? `Error Signing In` : `Error Signing Up`}`, {
         description: res.error ?? "An Error Occured", 
-
+        dismissible: true, 
       })
     }
     
   };
+
+//   toast('Hello World', {
+//   unstyled: true,
+//   classNames: {
+//     toast: 'bg-blue-400',
+//     title: 'text-red-400 text-2xl',
+//     description: 'text-red-400',
+//     actionButton: 'bg-zinc-400',
+//     cancelButton: 'bg-orange-400',
+//     closeButton: 'bg-lime-400',
+//   },
+// });
 
   return (
     <div className="flex flex-col gap-4">
@@ -86,6 +96,7 @@ const AuthForm = <T extends FieldValues>({
           onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-6 w-full"
         >
+
           {Object.keys(defaultValues).map((field) => (
             <FormField
               key={field}
@@ -98,7 +109,10 @@ const AuthForm = <T extends FieldValues>({
                   </FormLabel>
                   <FormControl>
                     {field.name === 'universityCard' ? (
-                      <ImageUpload />
+                      <ImageUpload 
+                        value={field.value}
+                        onChange={(val) => field.onChange(val)}
+                      />
                     ) : (
                       <Input required type={ FIELD_TYPES[field.name as keyof typeof FIELD_TYPES] }
                       {...field}
@@ -112,9 +126,11 @@ const AuthForm = <T extends FieldValues>({
               )}
             />
           ))}
+
           <Button type="submit" className="form-btn">
             {isSignIn ? 'Sign In' : 'Sign Up'}
           </Button>
+
         </form>
       </Form>
 

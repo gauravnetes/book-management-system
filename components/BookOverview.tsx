@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import BookCover from "./BookCover";
 
+// created generic type "Book" at types.d.ts
 const BookOverview = ({
   title,
   author,
@@ -75,7 +76,7 @@ const BookOverview = ({
         <div className="relative">
           <BookCover 
             variant="wide"
-            className="z-10"
+            className="z-10" // appears above of other elements
             coverColor={color}
             coverImage={cover}
           />

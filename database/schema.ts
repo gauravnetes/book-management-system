@@ -13,6 +13,7 @@ import {
 // generate postgres enum types like: 
 // CREATE TYPE status AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
+// Array of different strings that are possible answers to the status
 export const STATUS_ENUM = pgEnum("status", [
   "PENDING",
   "APPROVED",

@@ -8,10 +8,20 @@ import { users } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { hash } from "bcryptjs";
 import { signIn } from "@/auth";
+import { headers } from "next/headers";
+import ratelimit from "../ratelimit";
+import { redirect } from "next/navigation";
 
 export const signInWithCredentials = async (params: Pick<AuthCredentials, 'email' | 'password'>) => {
     const { email, password } = params;
 
+     const ip = (await headers()).get('x-forwarded-for') || "127.0.0.1"; 
+
+    const { success } = await ratelimit.limit(ip);
+
+    if (!success) {
+        return redirect("/too-fast")
+     }
     try {
         const res = await signIn('credentials', {
             email, 
@@ -33,8 +43,26 @@ export const signInWithCredentials = async (params: Pick<AuthCredentials, 'email
 export const signUp = async (params: AuthCredentials) => {
     const { fullName, email, universityId, password, universityCard } = params
 
+    // getting the current ip address
+    const ip = (await headers()).get('x-forwarded-for') || "127.0.0.1"; 
+
+    const { success } = await ratelimit.limit(ip);
+
+// type RatelimitResponse = {
+//   success:   boolean;   // true  → under the limit
+//   limit:     number;    // max allowed in the window
+//   remaining: number;    // how many left, never < 0
+//   reset:     number;    // Unix‑ms timestamp when the window resets
+//   pending:   Promise<unknown>; // async analytics / multi‑region sync
+//   reason?:   "timeout" | "cacheBlock" | "denyList";
+// };
+
+    if (!success) {
+        return redirect("/too-fast") // status: 429 too many reqs 
+    }
+
     const existingUser = await db.select()
-        .from(users)
+        .from(users) 
         .where(eq(users.email, email))
         .limit(1)
 

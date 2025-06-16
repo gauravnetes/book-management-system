@@ -17,12 +17,12 @@ const BookList = ({ title, books, containerClassName }: Props) => {
         } */}
         <ul className='book-list'>
           {books.map((book) => (
-            // render BookCard component
             <BookCard key={book.title} {...book} />
           ))}
         </ul>
     </section>
   )
 }
+
 
 export default BookList

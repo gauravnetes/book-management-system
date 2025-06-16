@@ -11,7 +11,7 @@ const Home = async () => {
   
   return (
     <>
-      <BookOverview {...sampleBooks[0]} />
+      <BookOverview {...sampleBooks[6]} />
 
       <BookList
         title="Latest Books"

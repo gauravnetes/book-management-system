@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ImageKitProvider } from "@imagekit/next";
 import config from "@/lib/config";
 import { Button } from "./ui/button";
@@ -12,6 +12,13 @@ const {
     imagekit: { publicKey, urlEndPoint },
   },
 } = config;
+
+// The ImageUpload component serves as a reusable UI element that allows users to:
+
+// Select an image file from their local device.
+// Upload that image to ImageKit's cloud storage.
+// Display a preview of the uploaded image.
+// Provide immediate feedback (success/error toasts) on the upload status.
 
 const authenticator = async () => {
   try {
@@ -30,20 +37,29 @@ const authenticator = async () => {
   }
 };
 
-const ImageUpload = () => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadedPath, setUploadedPath] = useState<string | null>(null);
+type ImageUploadProps = {
+  value?: string; 
+  onChange?: (val: string) => void; 
+}
 
-  const onSuccess = (res: any) => {
-    setFile
-  }
+const ImageUpload = ({ value, onChange }: ImageUploadProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null); // triggers the file selection dialog box 
+  const [uploadedPath, setUploadedPath] = useState<string | null>(null); // stores teh url of the uploaded image
+
+  // re-runs whenever the value prop changes 
+  useEffect(() => {
+    if(value) setUploadedPath(value); 
+  }, [value]); 
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
-      const { token, expire, signature } = await authenticator();
+      // step 1: Get auth params 
+      const { token, expire, signature } = await authenticator(); 
 
+      // step 2: prepare upload data
       const formData = new FormData();
       formData.append("file", file);
       formData.append("fileName", file.name);
@@ -58,15 +74,16 @@ const ImageUpload = () => {
       });
 
       const result = await uploadRes.json();
-      setUploadedPath(result.url); // or result.filePath
+      setUploadedPath(result.url); // update local state for preview 
+      onChange?.(result.url); // notify parent component 
 
-      toast("Image Uploaded Successfully", {
+      toast.success("Image Uploaded Successfully", {
         description: `${uploadedPath} Uploaded`
       })
       
     } catch (err) {
       console.error("Upload failed:", err);
-      toast("Image Upload Failed", {
+      toast.error("Image Upload Failed", {
         description: `Your Image Could not be Uploaded. Please Try Again`,
         action: {
             label: 'x', 
@@ -93,7 +110,7 @@ const ImageUpload = () => {
         className="upload-btn"
         onClick={(e) => {
           e.preventDefault();
-          fileInputRef.current?.click();
+          fileInputRef.current?.click(); // opens the file selection dialog box for the user 
         }}
       >
         <Image
