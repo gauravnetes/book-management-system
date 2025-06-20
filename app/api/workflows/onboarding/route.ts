@@ -1,5 +1,5 @@
 import { serve } from "@upstash/workflow/nextjs"
-
+import emailjs from "@emailjs/nodejs"
 type InitialData = {
   email: string
 }
@@ -35,9 +35,12 @@ export const { POST } = serve<InitialData>(async (context) => {
   }
 })
 
-async function sendEmail(message: string, email: string) {
-  // Implement email sending logic here
-  console.log(`Sending ${message} email to ${email}`)
+async function sendEmail({
+  templateId, 
+  toEmail, 
+  subject,
+}) {
+  
 }
 
 type UserState = "non-active" | "active"

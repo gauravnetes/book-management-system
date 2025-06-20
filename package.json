@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.9.1",
+    "@emailjs/nodejs": "^5.0.2",
     "@hookform/resolvers": "^5.0.1",
     "@imagekit/next": "^2.1.2",
     "@neondatabase/serverless": "^1.0.0",
