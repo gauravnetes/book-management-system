@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { bookSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import FileUpload from "@/components/FileUpload";
 
 // T takes the type whatever we pass into it
 // as we don't know what the exact structure will look like
@@ -195,7 +196,15 @@ const BookForm = ({
                     Book Image
                   </FormLabel>
                   <FormControl>
-                    {/* FileUpload */}
+                    <FileUpload 
+                      type="image"
+                      accept="image/*"
+                      placeholder="Book Cover"
+                      folder="books/cover"
+                      variant="light"
+                      onFileChange={field.onChange}
+                      value={field.value}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -250,7 +259,15 @@ const BookForm = ({
                     Book Trailer
                   </FormLabel>
                   <FormControl>
-                    {/* FileUpload */}
+                    <FileUpload 
+                      type="video"
+                      accept="video/*"
+                      placeholder="Book Trailer"
+                      folder="books/videos"
+                      variant="light"
+                      onFileChange={field.onChange}
+                      value={field.value}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
