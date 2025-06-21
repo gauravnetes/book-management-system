@@ -23,6 +23,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
 import ColorPicker from "../ColorPicker";
+import { createBook } from "@/lib/admin/actions/book";
+import { toast } from "sonner";
 
 // T takes the type whatever we pass into it
 // as we don't know what the exact structure will look like
@@ -55,7 +57,18 @@ const BookForm = ({
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof bookSchema>) => {
-    console.log(values); 
+    const result = await createBook(values)
+    if(result.success) {
+      toast.success('success', {
+        description: "Book Created Successfully"
+      }); 
+
+      router.push(`/admin/books/${result.data.id}`)
+    } else {
+      toast.error("Error", {
+        description: result.message
+      })
+    }
   }
 
   //   toast('Hello World', {

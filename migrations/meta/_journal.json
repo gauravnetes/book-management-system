@@ -8,6 +8,13 @@
       "when": 1747236669762,
       "tag": "0000_high_white_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750487944662,
+      "tag": "0001_huge_crusher_hogan",
+      "breakpoints": true
     }
   ]
 }
