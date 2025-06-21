@@ -22,6 +22,7 @@ import { bookSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
+import ColorPicker from "../ColorPicker";
 
 // T takes the type whatever we pass into it
 // as we don't know what the exact structure will look like
@@ -54,7 +55,7 @@ const BookForm = ({
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof bookSchema>) => {
-
+    console.log(values); 
   }
 
   //   toast('Hello World', {
@@ -221,7 +222,10 @@ const BookForm = ({
                     Primary Color
                   </FormLabel>
                   <FormControl>
-                    {/* ColorPicker */}
+                    <ColorPicker 
+                      onPickerChange={field.onChange}
+                      value={field.value}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -296,7 +300,7 @@ const BookForm = ({
               )}
             />
 
-            <Button type="submit" className="book-form_btn text-white">
+            <Button type="submit" onClick={form.handleSubmit(onSubmit)} className="book-form_btn text-white">
               Add Book to Library
             </Button>
 
