@@ -25,27 +25,32 @@ const uploadToImagekit = async (url: string, fileName: string, folder: string) =
             folder 
         }); 
 
-        return res.filePath; 
+        return res.url; 
     } catch (error) {
         console.error("error uploading file to imagekit: ", error)
     }
 }
- 
+
 const seed = async () => {
     console.log("Seeding data...");
 
     try {
+
+        console.log("Deleting existing books data...");
+        await db.delete(books); 
+        console.log("Successfully deleted old books data")
+        
         for (const book of dummyBooks) {
             const coverUrl = await uploadToImagekit(
                 book.coverUrl, 
-                `${book.title}.mp4`,
-                "books/covers"
+                `${book.title}.jpg`,
+                "/books/covers"
             ) as string; 
 
             const videoUrl = await uploadToImagekit(
                 book.videoUrl, 
-                `${book.title}.`, 
-                "books/video"
+                `${book.title}.mp4`, 
+                "/books/video"
             ) as string; 
 
             await db.insert(books).values({
