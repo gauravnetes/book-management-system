@@ -14,15 +14,16 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
 
   // whether the currently logged in user is an Admin
   const isAdmin = await db
-    .select({ isAdmin: users.role })
-    .from(users)
-    .where(eq(users.id, session.user.id))
-    .limit(1)
-    .then(res => res[0]?.isAdmin === 'ADMIN'); 
+                  .select({isAdmin: users.role})
+                  .from(users)
+                  .where(eq(users.id, session.user.id)) // if this matches isAdmin will return true 
+                  .limit(1)
+                  .then((res) => res[0]?.isAdmin === 'ADMIN'); // if this matches isAdmin will return true
 
   if (!isAdmin) {
     redirect('/')
   }
+
   return (
     <main className="flex min-h-screen w-full flex-row">
       <Sidebar session={session} />
