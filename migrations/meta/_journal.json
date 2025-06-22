@@ -15,6 +15,13 @@
       "when": 1750487944662,
       "tag": "0001_huge_crusher_hogan",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750615969772,
+      "tag": "0002_keen_mandrill",
+      "breakpoints": true
     }
   ]
 }

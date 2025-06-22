@@ -55,8 +55,25 @@ export const books = pgTable("books", {
   description: text('description').notNull(),
   totalCopies: integer('total_copies').notNull().default(1),
   availableCopies: integer('available_copies').notNull().default(0),
-  videoUrl: text('video_url').notNull(), 
-  summary: text('summary').notNull(), 
-  createdAt: timestamp('created_at', {withTimezone: true}).defaultNow(),
+  videoUrl: text('video_url').notNull(),
+  summary: text('summary').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 
+})
+
+export const borrowRecords = pgTable("borrow_records", {
+  id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
+  userId: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
+  bookId: uuid("book_id")
+    .references(() => books.id)
+    .notNull(),
+  borrowDate: timestamp("borrow_date", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  dueDate: date("due_date").notNull(),
+  returnDate: date("return_date"),
+  status: BORROW_STATUS_ENUM("status").default("BORROWED").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 })

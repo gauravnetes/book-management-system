@@ -1,16 +1,17 @@
-import { auth } from "@/auth";
-import BookOverview from "@/components/BookOverview";
-import BookTrailer from "@/components/BookTrailer";
+import React from "react";
 import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import React from "react";
+import { auth } from "@/auth";
+import BookOverview from "@/components/BookOverview";
+import BookTrailer from "@/components/BookTrailer";
 
-const page = async ({ params }: { params: Promise<{ id: string }> }) => {
+const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
-  const session = await auth()
-  // bookDetails return an array:
+  const session = await auth();
+
+  // Fetch data based on id
   const [bookDetails] = await db
     .select()
     .from(books)
@@ -19,37 +20,31 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   if (!bookDetails) redirect("/404");
 
-  console.log(bookDetails);
+  return (
+    <>
+      <BookOverview {...bookDetails} userId={session?.user?.id as string} />
 
+      <div className="book-details">
+        <div className="flex-[1.5]">
+          <section className="flex flex-col gap-7">
+            <h3>Video</h3>
 
-  return <div>
-    <BookOverview {...bookDetails} userId={session?.user?.id as string} />
+            <BookTrailer videoUrl={bookDetails.videoUrl} />
+          </section>
+          <section className="mt-10 flex flex-col gap-7">
+            <h3>Summary</h3>
 
-    {/* book video trailer */}
-
-    <div className="book-details">
-        <div className="flex-[1.5]"> 
-            <section className="flex flex-col gap-7">
-                <h3>Video</h3>
-
-                <BookTrailer videoUrl={bookDetails.videoUrl} />
-            </section>
-
-            <section className="mt-10 flex flex-col gap-7">
-                <h3>Summary</h3>
-
-                <div className="space-x-5 text-xl text-light-100">
-                    {bookDetails.summary.split("\n").map((line, i) => (
-                        <p key={i}>{line}</p>
-                    ))}
-                </div>
-            </section>
+            <div className="space-y-5 text-xl text-light-100">
+              {bookDetails.summary.split("\n").map((line, i) => (
+                <p key={i}>{line}</p>
+              ))}
+            </div>
+          </section>
         </div>
-    {/* similar books */}
-    </div>
 
-
-  </div>;
+        {/*  SIMILAR*/}
+      </div>
+    </>
+  );
 };
-
-export default page;
+export default Page;
